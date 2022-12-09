@@ -38,12 +38,14 @@ class FollowViewsTest(TestCase):
         self.authorised_client.get(reverse(
             'posts:profile_follow',
             kwargs=({'username': self.author.username})))
-        subscriptions = Follow.objects.filter(user=self.user, author=self.author)
+        subscriptions = Follow.objects.filter(
+            user=self.user, author=self.author)
         self.assertTrue(bool(subscriptions))
         self.authorised_client.get(reverse(
             'posts:profile_unfollow',
             kwargs=({'username': self.author.username})))
-        subscriptions = Follow.objects.filter(user=self.user, author=self.author)
+        subscriptions = Follow.objects.filter(
+            user=self.user, author=self.author)
         self.assertFalse(bool(subscriptions))
 
     def test_post_visibility(self):
@@ -58,6 +60,8 @@ class FollowViewsTest(TestCase):
             text='123123',
             group=self.group,
         )
-        response_follow = self.authorised_client.get(reverse('posts:follow_index'))
-        response_unfollow = self.unfollow_client.get(reverse('posts:follow_index'))
+        response_follow = self.authorised_client.get(
+            reverse('posts:follow_index'))
+        response_unfollow = self.unfollow_client.get(
+            reverse('posts:follow_index'))
         self.assertNotEqual(response_follow, response_unfollow)

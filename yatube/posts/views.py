@@ -9,7 +9,7 @@ from .models import Comment, Follow, Group, Post
 from .utils import paginator
 
 
-@cache_page(SECONDS*STORAGE_TIME)
+@cache_page(SECONDS * STORAGE_TIME)
 def index(request):
     posts = Post.objects.all()
     template = 'posts/index.html'
