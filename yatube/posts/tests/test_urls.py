@@ -1,0 +1,49 @@
+from django.contrib.auth import get_user_model
+from django.test import Client, TestCase
+from posts.models import Group, Post
+
+User = get_user_model()
+
+
+class PostURLTests(TestCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.user = User.objects.create_user(username='auth')
+        cls.group = Group.objects.create(
+            title='test group',
+            slug='test_slug',
+            description='test description',
+        )
+        cls.post = Post.objects.create(
+            author=cls.user,
+            text='Тестовый пост',
+            group=cls.group,
+        )
+
+    def setUp(self):
+        self.guest_client = Client()
+        self.authorised_client = Client()
+        self.authorised_client.force_login(self.user)
+
+    def test_urls_uses_correct_template(self):
+        templates_url_names = {
+            '/': 'posts/index.html',
+            f'/group/{self.group.slug}/': 'posts/group_list.html',
+            f'/profile/{self.user.username}/': 'posts/profile.html',
+            f'/posts/{self.post.id}/': 'posts/post_detail.html',
+            f'/posts/{self.post.id}/edit/': 'posts/create_post.html',
+            '/create/': 'posts/create_post.html',
+        }
+        for adress, template in templates_url_names.items():
+            with self.subTest(adress=adress):
+                response = self.authorised_client.get(adress)
+                self.assertTemplateUsed(response, template)
+
+    def test_url_redirect_not_auth_client(self):
+        response = self.guest_client.get('/create/')
+        self.assertEqual(response.status_code, 302)
+
+    def test_404_url(self):
+        response = self.authorised_client.get('/unexisting_page/')
+        self.assertEqual(response.status_code, 404)
