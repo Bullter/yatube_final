@@ -32,8 +32,8 @@ class PostCreateFormTests(TestCase):
         shutil.rmtree(TEMP_MEDIA_ROOT, ignore_errors=True)
 
     def setUp(self):
-        self.authorized_client = Client()
-        self.authorized_client.force_login(self.user)
+        self.authorised_client = Client()
+        self.authorised_client.force_login(self.user)
 
     def test_create_post(self):
         """Валидная форма создает запись в Post."""
@@ -56,7 +56,7 @@ class PostCreateFormTests(TestCase):
             'group': self.group.id,
             'image': uploaded
         }
-        self.authorized_client.post(
+        self.authorised_client.post(
             reverse('posts:post_create'),
             data=form_data,
             follow=True
