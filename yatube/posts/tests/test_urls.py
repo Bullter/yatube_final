@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.core.cache import cache
 from django.test import Client, TestCase
 from posts.models import Group, Post
 
@@ -25,6 +26,7 @@ class PostURLTests(TestCase):
         self.guest_client = Client()
         self.authorised_client = Client()
         self.authorised_client.force_login(self.user)
+        cache.clear()
 
     def test_urls_uses_correct_template(self):
         templates_url_names = {'/': 'posts/index.html'}
