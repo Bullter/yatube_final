@@ -36,9 +36,9 @@ class PostURLTests(TestCase):
             '/create/': 'posts/create_post.html',
             '/follow/': 'posts/follow.html',
         }
-        for adress, template in templates_url_names.items():
-            with self.subTest(adress=adress):
-                response = self.authorised_client.get(adress)
+        for address, template in templates_url_names.items():
+            with self.subTest(address=address):
+                response = self.authorised_client.get(address)
                 self.assertTemplateUsed(response, template)
 
     def test_url_redirect_not_auth_client(self):
