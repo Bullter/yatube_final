@@ -27,10 +27,7 @@ class PostURLTests(TestCase):
         self.authorised_client.force_login(self.user)
 
     def test_urls_uses_correct_template(self):
-        templates_url_names = {
-            '/': 'posts/index.html',
-            f'/group/{self.group.slug}/': 'posts/group_list.html',
-        }
+        templates_url_names = {'/': 'posts/index.html'}
         for address, template in templates_url_names.items():
             with self.subTest(address=address):
                 response = self.authorised_client.get(address)
