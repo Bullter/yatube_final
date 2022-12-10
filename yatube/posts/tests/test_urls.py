@@ -31,6 +31,7 @@ class PostURLTests(TestCase):
             '/': 'posts/index.html',
             f'/group/{self.group.slug}/': 'posts/group_list.html',
             f'/profile/{self.user.username}/': 'posts/profile.html',
+            f'post/{self.post.id}/comment': 'posts/post_detail.html',
             f'/posts/{self.post.id}/': 'posts/post_detail.html',
             f'/posts/{self.post.id}/edit/': 'posts/create_post.html',
             '/create/': 'posts/create_post.html',
