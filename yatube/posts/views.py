@@ -45,14 +45,13 @@ def profile(request, username):
     author = get_object_or_404(get_user_model(), username=username)
     posts = author.posts.all()
     page_obj = paginator(request, posts)
-    posts_count = posts.count()
     following = False
     if request.user.is_authenticated:
         following = Follow.objects.filter(user=request.user, author=author)
     context = {
         'author': author,
         'page_obj': page_obj,
-        'posts_count': posts_count,
+        'posts_count': posts.count(),
         'following': following
     }
     return render(request, template, context)
@@ -76,14 +75,12 @@ def post_detail(request, post_id):
 @login_required
 def post_create(request):
     template = 'posts/create_post.html'
-    form = PostForm(request.POST, files=request.FILES or None,)
-    if request.method == "POST":
-        if form.is_valid():
-            obj = form.save(commit=False)
-            obj.author = request.user
-            obj.save()
-            return redirect('posts:profile', request.user)
-        form = PostForm()
+    form = PostForm(request.POST or None, files=request.FILES or None,)
+    if form.is_valid():
+        obj = form.save(commit=False)
+        obj.author = request.user
+        obj.save()
+        return redirect('posts:profile', request.user)
     context = {
         'form': form,
         'is_edit': False
